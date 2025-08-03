@@ -16,6 +16,7 @@ mybatis-plus:
   type-aliases-package: com.itheima.mp.domain.po   #Mapper.xml文件地址，默认值
   configuration:
     map-underscore-to-camel-case: true    #是否开启下划线和驼峰的映射
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
   global-config:
     db-config:
       id-type: auto   #id为自动生成

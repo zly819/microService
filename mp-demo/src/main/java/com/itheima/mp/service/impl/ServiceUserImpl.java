@@ -7,6 +7,7 @@ import com.itheima.mp.domain.po.Address;
 import com.itheima.mp.domain.po.User;
 import com.itheima.mp.domain.vo.AddressVO;
 import com.itheima.mp.domain.vo.UserVO;
+import com.itheima.mp.enums.UserStatus;
 import com.itheima.mp.mapper.UserMapper;
 import com.itheima.mp.service.IUserService;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class ServiceUserImpl extends ServiceImpl<UserMapper, User> implements IU
         //1、查询用户
         User user = this.getById(id);
         //2、判断状态
-        if (user == null || user.getStatus() == 2) {
+        if (user == null || user.getStatus() == UserStatus.FREEZE) {
             throw new RuntimeException("用户状态异常");
         }
         //3、判断余额
