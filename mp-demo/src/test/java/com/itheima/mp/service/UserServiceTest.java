@@ -1,5 +1,6 @@
 package com.itheima.mp.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.mp.domain.po.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +38,27 @@ public class UserServiceTest {
         user.setPassword("123");
         user.setPhone("18688990011");
         user.setBalance(200);
-        user.setInfo("{\"age\": 24, \"intro\": \"英文老师\", \"gender\": \"female\"}");
+//        user.setInfo("{\"age\": 24, \"intro\": \"英文老师\", \"gender\": \"female\"}");
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
-
         return user;
+    }
 
+    //测试分页
+    @Test
+    public void testPage(){
+        //创建一个分页对象
+        Page<User> page = new Page<>(2, 2);
+
+        //分页查询 select * from user limit 2,2
+        //limit 起始索引号，页大小
+        Page<User> userPage = userService.page(page);
+
+        //输出分页信息
+        System.out.println("总页数：" + userPage.getPages());
+        System.out.println("总记录数" + userPage.getTotal());
+        for (User user : userPage.getRecords()) {
+            System.out.println(user);
+        }
     }
 }
