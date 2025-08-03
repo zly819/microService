@@ -22,6 +22,16 @@ public class ServiceUserImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new RuntimeException("用户余额不足");
         }
         //4、扣减余额
-        baseMapper.deductBalance(id, amount);
+//        baseMapper.deductBalance(id, amount);
+
+        //获取扣减之后的余额
+        int remainBalance = user.getBalance() - amount;
+
+        this.lambdaUpdate()
+                .set(User::getBalance, remainBalance)//设置余额
+                //当余额为0的时候，用户状态修改为2
+                .set(remainBalance == 0, User::getStatus, 2)
+                .eq(User::getId, id)//条件
+                .update();
     }
 }
