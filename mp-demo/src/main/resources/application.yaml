@@ -9,5 +9,13 @@ logging:
     com.itheima: debug
   pattern:
     dateformat: HH:mm:ss
-mybatis:
-  mapper-locations: classpath*:mapper/*.xml
+#mybatis:
+#  mapper-locations: classpath*:mapper/*.xml
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml      #别名扫描包
+  type-aliases-package: com.itheima.mp.domain.po   #Mapper.xml文件地址，默认值
+  configuration:
+    map-underscore-to-camel-case: true    #是否开启下划线和驼峰的映射
+  global-config:
+    db-config:
+      id-type: auto   #id为自动生成
