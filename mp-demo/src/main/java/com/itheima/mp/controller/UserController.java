@@ -40,16 +40,20 @@ public class UserController {
     @ApiOperation("根据id查询用户")
     @GetMapping("/{id}")
     public UserVO queryById(@PathVariable("id") Long id) {
-        User user = userService.getById(id);
-        return BeanUtil.copyProperties(user, UserVO.class);
+//        User user = userService.getById(id);
+//        return BeanUtil.copyProperties(user, UserVO.class);
+
+        return userService.queryUserAndAddressById(id);
     }
 
     @ApiOperation("根据id批量查询用户")
     @GetMapping
     public List<UserVO> queryByIds(@RequestParam("ids") List<Long> ids) {
-        List<User> usersList = userService.listByIds(ids);
+//        List<User> usersList = userService.listByIds(ids);
+//
+//        return BeanUtil.copyToList(usersList, UserVO.class);
 
-        return BeanUtil.copyToList(usersList, UserVO.class);
+        return userService.queryUserAndAddressByIds(ids);
     }
 
     /**
