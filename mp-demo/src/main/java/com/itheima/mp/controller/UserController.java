@@ -1,8 +1,10 @@
 package com.itheima.mp.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.itheima.mp.domain.dto.UserFormDTO;
 import com.itheima.mp.domain.po.User;
+import com.itheima.mp.domain.query.UserQuery;
 import com.itheima.mp.domain.vo.UserVO;
 import com.itheima.mp.service.IUserService;
 import io.swagger.annotations.Api;
@@ -60,6 +62,36 @@ public class UserController {
     public void updateBalanceById(@PathVariable("id") Long id, @PathVariable("amount") Integer amount) {
         userService.deductBalance(id, amount);
     }
+
+
+    @ApiOperation("根据查询条件userQuery 查询用户列表")
+    @PostMapping("/list")
+    public List<UserVO> queryList(@RequestBody UserQuery userQuery){
+        String userName = userQuery.getName();
+        Integer status = userQuery.getStatus();
+        Integer minBalance = userQuery.getMinBalance();
+        Integer maxBalance = userQuery.getMaxBalance();
+
+        List<User>  userList = userService.lambdaQuery()
+                .like(StrUtil.isNotBlank(userName), User::getUsername,userName)
+                .eq(status != null, User::getStatus, status)
+                .ge(minBalance != null, User::getBalance, minBalance)
+                .le(maxBalance != null, User::getBalance, maxBalance)
+                .list();//最终进行查询
+        return BeanUtil.copyToList(userList, UserVO.class);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
