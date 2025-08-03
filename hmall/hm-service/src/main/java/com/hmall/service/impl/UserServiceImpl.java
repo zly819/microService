@@ -38,7 +38,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public UserLoginVO login(LoginFormDTO loginDTO) {
         //TODO 校验用户名和密码; 用户名、密码不对登录失败；状态为冻结不能登录；验证成功后生成token
-        return null;
+        User user = lambdaQuery().eq(User::getUsername, loginDTO.getUsername()).one();
+
+        if (user == null) {
+            throw new ForbiddenException("用户名错误");
+        }
+        if (user.getStatus() == UserStatus.FROZEN) {
+            throw new ForbiddenException("用户已被冻结");
+        }
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new BadRequestException("用户名或密码错误");
+        }
+        String token = jwtTool.createToken(user.getId(), jwtProperties.getTokenTTL());
+        UserLoginVO userLoginVO = new UserLoginVO();
+        userLoginVO.setUserId(user.getId());
+        userLoginVO.setUsername(user.getUsername());
+        userLoginVO.setBalance(user.getBalance());
+        userLoginVO.setToken(token);
+
+        return userLoginVO;
     }
 
     @Override
@@ -59,4 +77,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         log.info("扣款成功");
     }
+
+
 }

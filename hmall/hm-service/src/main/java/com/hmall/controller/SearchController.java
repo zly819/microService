@@ -2,6 +2,7 @@ package com.hmall.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hmall.common.domain.PageDTO;
 import com.hmall.domain.dto.ItemDTO;
@@ -27,7 +28,29 @@ public class SearchController {
     @GetMapping("/list")
     public PageDTO<ItemDTO> search(ItemPageQuery query) {
         // TODO 根据条件分页查询，默认根据更新时间降序排序
+        LambdaQueryChainWrapper<Item> wrapper = itemService.lambdaQuery()
+                .like(StrUtil.isNotBlank(query.getKey()), Item::getName, query.getKey())
+                .eq(StrUtil.isNotBlank(query.getBrand()), Item::getBrand, query.getBrand())
+                .eq(StrUtil.isNotBlank(query.getCategory()), Item::getCategory, query.getCategory())
+                .ge(query.getMinPrice() != null, Item::getPrice, query.getMinPrice())
+                .le(query.getMaxPrice() != null, Item::getPrice, query.getMaxPrice());
+        if (query.getSortBy() !=null) {
+            switch (query.getSortBy()){
+                case "price":
+                    wrapper.orderBy(true, query.getIsAsc(), Item::getPrice);
+                    break;
+                case "sold":
+                    wrapper.orderBy(true, query.getIsAsc(), Item::getSold);
+                    break;
+                default:
+                    wrapper.orderBy(true, query.getIsAsc(), Item::getUpdateTime);
+                    break;
+            }
+        } else {
+            wrapper.orderBy(true, query.getIsAsc(), Item::getUpdateTime);
+        }
+        Page<Item> itemPage = wrapper.page(new Page<>(query.getPageNo(), query.getPageSize()));
 
-        return null;
+        return PageDTO.of(itemPage, ItemDTO.class);
     }
 }
