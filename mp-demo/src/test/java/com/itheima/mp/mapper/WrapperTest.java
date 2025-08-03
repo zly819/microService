@@ -85,4 +85,16 @@ public class WrapperTest {
         list.forEach(System.out::println);
     }
 
+    /**
+     * 更新id为1,2,4的用户的余额，扣200
+     */
+    @Test
+    public void testCustomWrapper(){
+        //1、构造更新条件对象
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("id",1, 2, 4);
+        //2、更新; 调用自定义的更新方法，传入更新数值与查询条件对象
+        userMapper.updateBalanceByWrapper(200,queryWrapper);
+    }
+
 }
