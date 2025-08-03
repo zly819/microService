@@ -13,4 +13,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Update("update mp.user set balance = balance - #{amount} ${ew.customSqlSegment}")
     void updateBalanceByWrapper(@Param("amount") int amount, @Param("ew") QueryWrapper<User> queryWrapper);
 
+    @Update("UPDATE mp.user SET balance = balance - #{amount} WHERE id=#{id}")
+    void deductBalance(Long id, Integer amount);
 }

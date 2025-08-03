@@ -50,5 +50,16 @@ public class UserController {
         return BeanUtil.copyToList(usersList, UserVO.class);
     }
 
+    /**
+     * 根据用户Id、金额扣减用户的余额
+     * @param id 用户id
+     * @param amount 金额
+     */
+    @ApiOperation("根据用户Id、金额扣减用户的余额")
+    @PutMapping("/{id}/deduction/{amount}")
+    public void updateBalanceById(@PathVariable("id") Long id, @PathVariable("amount") Integer amount) {
+        userService.deductBalance(id, amount);
+    }
+
 
 }
