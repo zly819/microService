@@ -19,3 +19,15 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto   #id为自动生成
+knife4j:
+  enable: true    #开启swagger
+  openapi:
+    title: 用户接管理
+    version: 1.0.0
+    concat: 黑马
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - com.itheima.mp.controller
